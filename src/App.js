@@ -1,14 +1,12 @@
 import "./App.css";
 import React, { useState } from "react";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 const todo = {
-  text : 'Do homework',
-  id : 1,
-  status : "Active" | "Completed",
-}
-
-
+  text: "Do homework",
+  id: 1,
+  status: "Active" | "Completed",
+};
 
 function App() {
   const [todo, setTodo] = useState([]);
@@ -36,13 +34,12 @@ function App() {
       }
       return todo;
     });
-    
-
-  }
-console.log(todo);
+  };
+  console.log(todo);
 
   return (
-    <div className="...">
+    <div className="App">
+      <div>Todo List</div>
       <input
         placeholder="Add to do"
         value={inputValue}
@@ -51,11 +48,18 @@ console.log(todo);
       {error.length > 1 && <div>{error}</div>}
       <button onClick={handleAddButton}>Add</button>
       {todo.map((todo) => {
-        return <div>
-          <input type="checkbox" onChange={handleCheckbox(todo.id)}></input>
-          {todo.text}
-          </div>;
+        return (
+          <div>
+            <input type="checkbox" onChange={handleCheckbox(todo.id)}></input>
+            {todo.text}
+          </div>
+        );
       })}
+      <div className="Status">
+        <div>ALL</div>
+        <div>Active</div>
+        <div>Completed</div> 
+      </div>
     </div>
   );
 }
