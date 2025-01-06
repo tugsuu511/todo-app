@@ -10,15 +10,15 @@ const todo = {
 
 function App() {
   const [todo, setTodo] = useState([]);
-  const [deletedTodo, setDeletedTodo] = useState([]);
   const [error, setError] = useState("");
   const [inputValue, setInputValue] = useState("");
+  const [filterState, setFilterState] = useState("ALL");
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
   };
   const handleAddButton = () => {
     if (inputValue.length === 0) {
-      setError("Please enter a todo");
+      setError("Please enter a task!");
       return;
     } else {
       setError("");
@@ -27,38 +27,79 @@ function App() {
     }
   };
   const handleCheckbox = (id) => {
-    console.log(id);
-    todo.map((todo) => {
-      if (id === todo.id) {
-        todo.status = "Completed";
+    const newTodo = todo.map((todo) => {
+      if (todo.id === id) {
+        return {
+          ...todo,
+          status: todo.status === "Active" ? "Completed" : "Active",
+        };
       }
       return todo;
     });
+    setTodo(newTodo);
+    console.log(todo);
+  };
+  const handleFilterState = (state) => {
+    setFilterState(state);
   };
   console.log(todo);
 
   return (
-    <div className="App">
-      <div>Todo List</div>
-      <input
-        placeholder="Add to do"
-        value={inputValue}
-        onChange={handleInputChange}
-      ></input>
-      {error.length > 1 && <div>{error}</div>}
-      <button onClick={handleAddButton}>Add</button>
-      {todo.map((todo) => {
-        return (
-          <div>
-            <input type="checkbox" onChange={handleCheckbox(todo.id)}></input>
-            {todo.text}
-          </div>
-        );
-      })}
-      <div className="Status">
-        <div>ALL</div>
-        <div>Active</div>
-        <div>Completed</div> 
+    <div className="body">
+      <div className="App">
+        <div className="title">Todo List</div>
+        <div className="inputContainer">
+          {" "}
+          <input
+            className="input"
+            placeholder="Add a new task..."
+            value={inputValue}
+            onChange={handleInputChange}
+          ></input>
+          {error.length > 1 && <div>{error}</div>}
+          <button className="button" onClick={handleAddButton}>
+            Add
+          </button>
+        </div>
+        <div className="Status">
+          <button onClick={() => handleFilterState("ALL")} className="sort">
+            ALL
+          </button>
+          <button onClick={() => handleFilterState("Active")} className="sort">
+            Active
+          </button>
+          <button
+            onClick={() => handleFilterState("Completed")}
+            className="sort"
+          >
+            Completed
+          </button>
+        </div>
+
+        {todo
+          .filter((todo) => {
+            if (filterState === "ALL") {
+              return true;
+            } else {
+              return todo.status === filterState;
+            }
+          })
+          .map((todo) => {
+            return (
+              <div className="todo">
+                <div className="todoText">
+                  <input
+                    type="checkbox"
+                    checked={todo.status === "Completed"}
+                    onChange={() => handleCheckbox(todo.id)}
+                  ></input>
+                  {todo.text}
+                </div>
+                <button className="delete">Delete</button>
+              </div>
+            );
+          })}
+        <div className="footer">Powered by Pinecone academy</div>
       </div>
     </div>
   );
