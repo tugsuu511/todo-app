@@ -50,7 +50,12 @@ function App() {
   };
 
   const handleClearCompleted = () => {
-    setTodo(todo.filter((todo) => todo.status !== "Completed"));
+    const confirmClear = window.confirm(
+      "Are you sure you want to clear all completed tasks?"
+    );
+    if (confirmClear) {
+      setTodo(todo.filter((todo) => todo.status !== "Completed"));
+    }
   };
 
   const completedTasksCount = todo.filter(
@@ -126,7 +131,7 @@ function App() {
                     checked={todo.status === "Completed"}
                     onChange={() => handleCheckbox(todo.id)}
                   />
-                  {todo.text}
+                  {todo.text}{" "}
                 </div>
                 <button
                   className="delete"
