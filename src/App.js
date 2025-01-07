@@ -2,22 +2,18 @@ import "./App.css";
 import React, { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-const todo = {
-  text: "Do homework",
-  id: 1,
-  status: "Active" | "Completed",
-};
-
 function App() {
   const [todo, setTodo] = useState([]);
   const [error, setError] = useState("");
   const [inputValue, setInputValue] = useState("");
   const [filterState, setFilterState] = useState("ALL");
+
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
   };
+
   const handleAddButton = () => {
-    if (inputValue.length === 0) {
+    if (inputValue.trim().length === 0) {
       setError("Please enter a task!");
       return;
     } else {
@@ -26,6 +22,7 @@ function App() {
       setInputValue("");
     }
   };
+
   const handleCheckbox = (id) => {
     const newTodo = todo.map((todo) => {
       if (todo.id === id) {
@@ -37,44 +34,80 @@ function App() {
       return todo;
     });
     setTodo(newTodo);
-    console.log(todo);
   };
+
+  const handleDeleteState = (id) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this task?"
+    );
+    if (confirmDelete) {
+      setTodo(todo.filter((todo) => todo.id !== id));
+    }
+  };
+
   const handleFilterState = (state) => {
     setFilterState(state);
   };
-  console.log(todo);
+
+  const handleClearCompleted = () => {
+    setTodo(todo.filter((todo) => todo.status !== "Completed"));
+  };
+
+  const completedTasksCount = todo.filter(
+    (todo) => todo.status === "Completed"
+  ).length;
 
   return (
     <div className="body">
       <div className="App">
         <div className="title">Todo List</div>
         <div className="inputContainer">
-          {" "}
           <input
             className="input"
             placeholder="Add a new task..."
             value={inputValue}
             onChange={handleInputChange}
-          ></input>
+          />
           {error.length > 1 && <div>{error}</div>}
           <button className="button" onClick={handleAddButton}>
             Add
           </button>
         </div>
+
         <div className="Status">
-          <button onClick={() => handleFilterState("ALL")} className="sort">
+          <button
+            onClick={() => handleFilterState("ALL")}
+            className="sort"
+            style={{
+              backgroundColor: filterState === "ALL" ? "#007bff" : "",
+              color: filterState === "ALL" ? "white" : "",
+            }}
+          >
             ALL
           </button>
-          <button onClick={() => handleFilterState("Active")} className="sort">
+          <button
+            onClick={() => handleFilterState("Active")}
+            className="sort"
+            style={{
+              backgroundColor: filterState === "Active" ? "#007bff" : "",
+              color: filterState === "Active" ? "white" : "",
+            }}
+          >
             Active
           </button>
           <button
             onClick={() => handleFilterState("Completed")}
             className="sort"
+            style={{
+              backgroundColor: filterState === "Completed" ? "#007bff" : "",
+              color: filterState === "Completed" ? "white" : "",
+            }}
           >
             Completed
           </button>
         </div>
+
+        {todo.length === 0 && <div>No tasks yet. Add one above!</div>}
 
         {todo
           .filter((todo) => {
@@ -86,19 +119,37 @@ function App() {
           })
           .map((todo) => {
             return (
-              <div className="todo">
+              <div key={todo.id} className="todo">
                 <div className="todoText">
                   <input
                     type="checkbox"
                     checked={todo.status === "Completed"}
                     onChange={() => handleCheckbox(todo.id)}
-                  ></input>
+                  />
                   {todo.text}
                 </div>
-                <button className="delete">Delete</button>
+                <button
+                  className="delete"
+                  onClick={() => handleDeleteState(todo.id)}
+                >
+                  Delete
+                </button>
               </div>
             );
           })}
+
+        {todo.length > 0 && (
+          <div className="completedContainer">
+            <div className="completedCount">
+              {completedTasksCount} of {todo.length} tasks completed
+            </div>
+
+            <button className="clearCompleted" onClick={handleClearCompleted}>
+              Clear Completed
+            </button>
+          </div>
+        )}
+
         <div className="footer">Powered by Pinecone academy</div>
       </div>
     </div>
