@@ -125,21 +125,27 @@ function App() {
           .map((todo) => {
             return (
               <div key={todo.id} className="todo">
-                <div className="todoText">
-                  <input
-                    type="checkbox"
-                    checked={todo.status === "Completed"}
-                    onChange={() => handleCheckbox(todo.id)}
-                  />
-                  {todo.text}{" "}
-                </div>
-                <button
-                  className="delete"
-                  onClick={() => handleDeleteState(todo.id)}
-                >
-                  Delete
-                </button>
+              <div
+                className="todoText"
+                style={{
+                  textDecoration: todo.status === "Completed" ? "line-through" : "none",
+                }}
+              >
+                <input
+                  type="checkbox"
+                  checked={todo.status === "Completed"}
+                  onChange={() => handleCheckbox(todo.id)}
+                />
+                {todo.text}
               </div>
+              <button
+                className="delete"
+                onClick={() => handleDeleteState(todo.id)}
+              >
+                Delete
+              </button>
+            </div>
+            
             );
           })}
 
