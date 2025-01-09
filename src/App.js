@@ -2,6 +2,8 @@ import "./App.css";
 import React, { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
+import Status from "./components/Status";
+
 function App() {
   const [todo, setTodo] = useState([]);
   const [error, setError] = useState("");
@@ -45,9 +47,7 @@ function App() {
     }
   };
 
-  const handleFilterState = (state) => {
-    setFilterState(state);
-  };
+  
 
   const handleClearCompleted = () => {
     const confirmClear = window.confirm(
@@ -78,39 +78,7 @@ function App() {
             Add
           </button>
         </div>
-
-        <div className="Status">
-          <button
-            onClick={() => handleFilterState("ALL")}
-            className="sort"
-            style={{
-              backgroundColor: filterState === "ALL" ? "#007bff" : "",
-              color: filterState === "ALL" ? "white" : "",
-            }}
-          >
-            ALL
-          </button>
-          <button
-            onClick={() => handleFilterState("Active")}
-            className="sort"
-            style={{
-              backgroundColor: filterState === "Active" ? "#007bff" : "",
-              color: filterState === "Active" ? "white" : "",
-            }}
-          >
-            Active
-          </button>
-          <button
-            onClick={() => handleFilterState("Completed")}
-            className="sort"
-            style={{
-              backgroundColor: filterState === "Completed" ? "#007bff" : "",
-              color: filterState === "Completed" ? "white" : "",
-            }}
-          >
-            Completed
-          </button>
-        </div>
+        <Status setFilterState={setFilterState} />
 
         {todo.length === 0 && <div>No tasks yet. Add one above!</div>}
 
@@ -125,27 +93,27 @@ function App() {
           .map((todo) => {
             return (
               <div key={todo.id} className="todo">
-              <div
-                className="todoText"
-                style={{
-                  textDecoration: todo.status === "Completed" ? "line-through" : "none",
-                }}
-              >
-                <input
-                  type="checkbox"
-                  checked={todo.status === "Completed"}
-                  onChange={() => handleCheckbox(todo.id)}
-                />
-                {todo.text}
+                <div
+                  className="todoText"
+                  style={{
+                    textDecoration:
+                      todo.status === "Completed" ? "line-through" : "none",
+                  }}
+                >
+                  <input
+                    type="checkbox"
+                    checked={todo.status === "Completed"}
+                    onChange={() => handleCheckbox(todo.id)}
+                  />
+                  {todo.text}
+                </div>
+                <button
+                  className="delete"
+                  onClick={() => handleDeleteState(todo.id)}
+                >
+                  Delete
+                </button>
               </div>
-              <button
-                className="delete"
-                onClick={() => handleDeleteState(todo.id)}
-              >
-                Delete
-              </button>
-            </div>
-            
             );
           })}
 
